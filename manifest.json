@@ -1,0 +1,21 @@
+{
+    "name": "timetracker",
+    "version": "0.1.0",
+    "description": "track time spent on each website",
+    "permissions": ["storage","tabs","activeTab","declarativeContent"],
+    "background": {
+        "service worker": "background.js"
+    },
+    
+    "page_action": {
+        "default_popup":"popup.html",
+        "default_icon":{
+            "16":"timetracker16.png",
+            "32":"timetracker32.png",
+            "64":"timetracker64.png",
+            "128":"timetracker128.png"
+        }
+
+    },
+    "manifest_version": 2
+}
