@@ -1,61 +1,147 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            body {
-            width: 300px;
-            height: 200px;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            }
-            button{
-                height: 40px;
-                width: 100px;
-                outline: none;
-            }
-            .grid-container{
-                display: grid;
-                column-gap: 25px;
-                row-gap: 25px;
-                grid-template-columns: auto auto ;
-                grid-template-rows: auto auto;
-                background-color: black;
-                padding: 25px;
-            }
-            .grid-item {
-                background-color: rgba(255, 255, 255, 0.8);
-                border: 1px solid rgba(0, 0, 0, 0.8);
-                padding: 20px;
-                font-size: 30px;
-
-                text-align: center;
-            }
-
-        </style>
-    </head>
-    <body>
-        <div class="grid-container">
-            <div class="grid-item">
-                TotalTime
-                <div id="totalTime">0:0:0</div>
-            </div>
-            <div class="grid-item">
-                Study
-                <div id="study">0:0:0</div>
-            </div>
-            <div class="grid-item">
-                Entertainment 
-                <div id="entertainment">0:0:0</div>
-            </div>
-            <div class="grid-item">Others
-                <div id="others">0:0:0</div>
-            </div>
-            
-        </div>
-        <button id="seeMore">See more</button>
-
-        <script src="popup.js"></script>
-    </body>
+  <head>
+    <title>Website Time Tracker</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        min-width: 340px;
+        background: linear-gradient(135deg, #e3e9f7 0%, #f4f6fb 100%);
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(60, 80, 180, 0.1);
+        margin: 24px auto;
+        padding: 26px 20px 20px 20px;
+        max-width: 370px;
+      }
+      h2 {
+        font-size: 1.35em;
+        margin-bottom: 1em;
+        color: #2d3a4a;
+        letter-spacing: 0.5px;
+      }
+      ul {
+        padding-left: 0;
+        margin: 0.2em 0 0.7em 0;
+        list-style: none;
+      }
+      li {
+        margin-bottom: 0.4em;
+        color: #3a4657;
+      }
+      .category-header {
+        background: #f3f6fd;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.18s;
+      }
+      .category-header:hover {
+        background: #e3e9f7;
+      }
+      .category-domains {
+        background: #f7f9fc;
+        border-radius: 8px;
+        margin: 0.5em 0 0.7em 0;
+        padding: 8px 12px 6px 12px;
+        box-shadow: 0 1px 4px rgba(90, 120, 200, 0.04);
+      }
+      .category-domains li {
+        margin-bottom: 0.3em;
+        padding: 2px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e3e7ee;
+        font-size: 0.98em;
+      }
+      .category-domains li:last-child {
+        border-bottom: none;
+      }
+      .inlineCategorySelect {
+        margin-left: 10px;
+        padding: 5px 8px;
+        border-radius: 6px;
+        border: 1px solid #cfd8dc;
+        background: #f9fafb;
+        font-size: 0.97em;
+        transition: border 0.2s;
+      }
+      .inlineCategorySelect:focus {
+        border: 1.5px solid #5b9df9;
+        background: #fff;
+      }
+      .expand-arrow {
+        font-size: 1.25em;
+        margin-left: 8px;
+        color: #5b9df9;
+        transition: transform 0.2s;
+      }
+      .expanded .expand-arrow {
+        transform: rotate(180deg);
+      }
+      input[type="text"] {
+        padding: 7px 10px;
+        border: 1px solid #cfd8dc;
+        border-radius: 6px;
+        font-size: 1em;
+        margin-bottom: 0.5em;
+        margin-right: 0.5em;
+        background: #f9fafb;
+        outline: none;
+        transition: border 0.2s;
+      }
+      input[type="text"]:focus {
+        border: 1.5px solid #5b9df9;
+        background: #fff;
+      }
+      button {
+        background: linear-gradient(90deg, #5b9df9 60%, #3a7bd5 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 7px 16px;
+        font-size: 1em;
+        cursor: pointer;
+        margin-bottom: 0.5em;
+        margin-right: 0.5em;
+        transition: background 0.2s, box-shadow 0.2s;
+        box-shadow: 0 1px 4px rgba(90, 120, 200, 0.07);
+      }
+      button:disabled {
+        background: #b0c4de;
+        cursor: not-allowed;
+      }
+      button:hover:not(:disabled) {
+        background: linear-gradient(90deg, #3a7bd5 60%, #5b9df9 100%);
+      }
+      #addCategorySection {
+        margin-top: 1.2em;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Time Spent Today</h2>
+      <div id="categorySection">
+        <ul id="categoryList"></ul>
+      </div>
+      <div id="addCategorySection" style="margin-top: 1.2em">
+        <input id="newCategoryName" placeholder="New category name" />
+        <button id="addCategoryBtn">Add Category</button>
+        <button id="downloadCsvBtn" style="float: right">Download CSV</button>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
 </html>
